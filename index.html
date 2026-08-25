@@ -1625,35 +1625,43 @@ if(window.visualViewport){
 // ===== v12 Welcome + BGM =====
 let welcomeTimer = null;
 let bgmStarted = false;
+let bgmStarting = false;
 let bgmFadeTimer = null;
 
-function fadeInBgm(targetVolume=.18, duration=3400){
-  if(!bgmAudio || bgmStarted) return;
-  bgmStarted = true;
+async function fadeInBgm(targetVolume=.16, duration=3600){
+  if(!bgmAudio || bgmStarted || bgmStarting) return false;
+
+  bgmStarting = true;
   bgmAudio.volume = 0.001;
-  const playAttempt = bgmAudio.play();
-  if(playAttempt && playAttempt.catch){
-    playAttempt.catch(()=>{
-      bgmStarted = false;
-    });
+
+  try{
+    await bgmAudio.play();
+  }catch(e){
+    bgmStarting = false;
+    return false;
   }
-  const steps = 28;
-  const stepVol = targetVolume / steps;
-  let current = 0;
+
+  bgmStarted = true;
+  bgmStarting = false;
+
   if(bgmFadeTimer) clearInterval(bgmFadeTimer);
+
+  const steps = 30;
+  let current = 0;
   bgmFadeTimer = setInterval(()=>{
     current++;
-    const next = Math.min(targetVolume, current * stepVol);
-    bgmAudio.volume = next;
+    bgmAudio.volume = Math.min(targetVolume, targetVolume * current / steps);
     if(current >= steps){
       clearInterval(bgmFadeTimer);
       bgmFadeTimer = null;
     }
   }, duration / steps);
+
+  return true;
 }
 
 function tryStartBgm(){
-  if(bgmStarted) return;
+  if(bgmStarted || bgmStarting) return;
   fadeInBgm(.16, 3600);
 }
 
@@ -1668,8 +1676,13 @@ function closeWelcome(){
   },1200);
 }
 
-// 先給白光一點時間，再嘗試啟動 BGM（如果瀏覽器允許）
+// 桌機若允許 autoplay，先嘗試；手機若擋掉，等待真正的使用者操作。
 setTimeout(tryStartBgm, 2300);
+
+// 任何使用者操作都可以補啟動，不使用 once，避免第一次機會被吃掉。
+['pointerdown','touchstart','click','keydown'].forEach(evt=>{
+  window.addEventListener(evt, tryStartBgm, {passive:true});
+});
 
 // 約 5.6 秒後自然進入；也可輕觸直接進。
 welcomeTimer = setTimeout(closeWelcome, 7200);
@@ -1686,10 +1699,7 @@ winzWelcome?.addEventListener('click', (e)=>{
   }
 });
 
-// 若 autoplay 被擋，第一次任何使用者互動就補啟動
-['pointerdown','touchstart','keydown'].forEach(evt=>{
-  window.addEventListener(evt, tryStartBgm, {once:true, passive:true});
-});
+
 
 })();
 </script>
