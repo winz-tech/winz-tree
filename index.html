@@ -1024,6 +1024,176 @@ button{font:inherit}
   }
 }
 
+
+/* ===== 大字舒適閱讀版 ===== */
+.info-pill{
+  width:min(calc(100% - 22px),560px);
+  border-radius:24px;
+  background:rgba(255,253,247,.86);
+  border:1px solid rgba(255,255,255,.94);
+  box-shadow:0 14px 38px rgba(91,80,60,.12);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+
+.info-head{
+  min-height:68px !important;
+  padding:14px 16px !important;
+  gap:13px !important;
+}
+
+.info-icon{
+  width:38px !important;
+  height:38px !important;
+  flex:0 0 38px;
+  border-radius:14px !important;
+  font-size:19px !important;
+}
+
+.info-copy{
+  flex:1;
+  min-width:0;
+}
+
+.info-kicker{
+  margin-bottom:3px;
+  font-size:12px;
+  font-weight:650;
+  letter-spacing:.08em;
+  color:#9aa294;
+}
+
+.info-title{
+  font-size:20px !important;
+  line-height:1.38 !important;
+  font-weight:800 !important;
+  color:#58655a;
+  letter-spacing:.01em;
+}
+
+.info-toggle{
+  flex:0 0 auto;
+  min-width:42px;
+  font-size:13px !important;
+  color:#8c9589;
+}
+
+.info-pill:not(.open) #toggle::before{
+  font-size:13px !important;
+}
+
+.info-body{
+  padding:0 18px !important;
+}
+
+.info-pill.open .info-body{
+  max-height:360px !important;
+  padding:0 18px 18px !important;
+}
+
+.info-body p{
+  margin:0;
+  padding-top:14px;
+  border-top:1px solid rgba(121,136,117,.13);
+  font-size:17px !important;
+  line-height:1.85 !important;
+  font-weight:500;
+  color:#687469 !important;
+  letter-spacing:.01em;
+}
+
+.examples-wrap{
+  margin-top:15px;
+}
+
+.examples-label{
+  margin-bottom:8px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.12em;
+  color:#9aa294;
+}
+
+.examples{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px !important;
+  margin-top:0 !important;
+}
+
+.examples span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:36px;
+  padding:7px 9px !important;
+  border-radius:12px !important;
+  background:rgba(255,255,255,.66) !important;
+  border:1px solid rgba(255,255,255,.76);
+  font-size:14px !important;
+  line-height:1.35;
+  font-weight:650;
+  color:#687368 !important;
+  text-align:center;
+}
+
+/* 手機：寧可佔一點畫面，也不要讓人瞇眼 */
+@media(max-width:600px){
+  .info-pill{
+    width:calc(100% - 12px) !important;
+    bottom:max(6px,env(safe-area-inset-bottom)) !important;
+    border-radius:22px !important;
+  }
+
+  .info-head{
+    min-height:72px !important;
+    padding:14px 15px !important;
+  }
+
+  .info-icon{
+    width:40px !important;
+    height:40px !important;
+    flex-basis:40px;
+    font-size:20px !important;
+  }
+
+  .info-kicker{
+    font-size:13px;
+    margin-bottom:4px;
+  }
+
+  .info-title{
+    font-size:20px !important;
+    line-height:1.42 !important;
+  }
+
+  .info-toggle,
+  .info-pill:not(.open) #toggle::before{
+    font-size:13px !important;
+  }
+
+  .info-pill.open .info-body{
+    max-height:42svh !important;
+    overflow-y:auto;
+    padding:0 16px 17px !important;
+  }
+
+  .info-body p{
+    font-size:17px !important;
+    line-height:1.85 !important;
+  }
+
+  .examples{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px !important;
+  }
+
+  .examples span{
+    min-height:38px;
+    font-size:14px !important;
+  }
+}
+
 </style>
 
 <meta name="description" content="不是看系統怎麼操作，而是理解這棵樹怎麼被養成。從人、根、幹、枝、葉到果，看見穎利系統成長的脈絡。">
@@ -1150,12 +1320,18 @@ button{font:inherit}
   <section class="info-pill" id="info">
     <div class="info-head" id="infoHead">
       <div class="info-icon" id="icon">✦</div>
-      <div class="info-title" id="title">看見透明雙圓環，就直接摸它</div>
+      <div class="info-copy">
+        <div class="info-kicker" id="infoKicker">輕觸樹上的光環</div>
+        <div class="info-title" id="title">探索這棵穎利系統樹</div>
+      </div>
       <div class="info-toggle" id="toggle">展開</div>
     </div>
     <div class="info-body">
-      <p id="desc">每一種馬卡龍透明光環，都代表這棵系統樹的一個層次。顏色只留在細圓框與淡光裡，讓提示看得見，但不蓋住原本的樹。</p>
-      <div class="examples" id="examples"></div>
+      <p id="desc">每一個光環，都代表這棵系統樹的一個層次。點下去，慢慢看它在穎利代表什麼。</p>
+      <div class="examples-wrap">
+        <div class="examples-label">例如</div>
+        <div class="examples" id="examples"></div>
+      </div>
     </div>
   </section>
 </main>
@@ -1252,6 +1428,7 @@ const info=document.getElementById('info');
 const infoHead=document.getElementById('infoHead');
 const icon=document.getElementById('icon');
 const title=document.getElementById('title');
+const infoKicker=document.getElementById('infoKicker');
 const desc=document.getElementById('desc');
 const examples=document.getElementById('examples');
 const toggle=document.getElementById('toggle');
@@ -1305,14 +1482,15 @@ function select(layer){
  markers.forEach(m=>m.classList.toggle('active',m.dataset.layer===layer));
  glows.forEach(g=>g.classList.toggle('show',g.dataset.glow===layer));
  icon.textContent=d.icon;
+ infoKicker.textContent='這一層代表';
  title.textContent=d.title;
  desc.textContent=d.desc;
  examples.innerHTML=d.ex.map(x=>`<span>${x}</span>`).join('');
  speakFromTree(layer);
 
- // 詳細說明不再搶著跳出來；樹本身先說話
- info.classList.remove('open');
- toggle.textContent='展開';
+ // 大字閱讀版：點到任何層就直接打開，不用再找「詳細」
+ info.classList.add('open');
+ toggle.textContent='收起';
 }
 
 markers.forEach(m=>m.addEventListener('click',e=>{e.stopPropagation();playSfx(m.dataset.layer);select(m.dataset.layer)}));
@@ -1408,6 +1586,7 @@ function showStoryStage(stage,index,withSound=true){
   glows.forEach(g=>g.classList.toggle('show',g.dataset.glow===stage.layer));
 
   icon.textContent=d.icon;
+  infoKicker.textContent='這一層代表';
   title.textContent=d.title;
   desc.textContent=d.desc;
   examples.innerHTML=d.ex.map(x=>`<span>${x}</span>`).join('');
